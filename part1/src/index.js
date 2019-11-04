@@ -33,25 +33,26 @@ const Course = ({course}) => (
     </div>
 )
 
-const Counter = () => {
-    const [ counter, setCounter ] = useState(0);
+const Counter = ({counter}) => <p>Count: {counter}</p>
 
-    const increaseByOne = () => setCounter(counter + 1);
-    const resetCounter = () => setCounter(0);
-    return (
-        <>
-            <button onClick={increaseByOne}>
-                +
-            </button>
-            <button onClick={resetCounter}>
-                Reset
-            </button>
-            <p>Count: {counter}</p>
-        </>
-    )
+const CounterButtons = ({counter, setter}) => {
+    const setToValue = (value) => () => setter(value);
+    return (<>
+        <button onClick={setToValue(counter + 1)}>
+            plus
+        </button>
+        <button onClick={setToValue(counter - 1)}>
+            minus
+        </button>
+        <button onClick={setToValue(0)}>
+            Reset
+        </button>
+    </>)
 }
 
 const App = () => {
+    const [counter, setCounter] = useState(0);
+
     const course = {
         name: 'Half Stack application development',
         parts: [
@@ -74,12 +75,11 @@ const App = () => {
         <div>
             <Course course={course} />
             <hr />
-            <Counter />
+            <CounterButtons counter={counter} setter={setCounter} />
+            <Counter counter={counter}/>
         </div>
         
     )
 }
 
-let counter = 1;
-
-ReactDOM.render(<App counter={counter} />, document.getElementById('root'));
+ReactDOM.render(<App />, document.getElementById('root'));
