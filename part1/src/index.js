@@ -1,28 +1,54 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 
-const Header = (props) => (
-    <h1>{props.course.name}</h1>
+const Header = ({course}) => (
+    <h1>{course.name}</h1>
 )
 
-const Part = (props) => (
+const Part = ({part, exercises}) => (
     <p>
-        {props.part} {props.exercises}
+        {part} {exercises}
     </p>
 )
 
-const Content = (props) => (
+const Content = ({course}) => (
     <>
-        {props.course.parts.map((value) => (
+        {course.parts.map((value) => (
             <Part key={value.name} part={value.name} exercises={value.exercises} />
         ))}
     </>
 )
 
-const Total = (props) => {
+const Total = ({course}) => {
     const sum = (a, b) => a + b;
-    const exercises = props.course.parts.map((value) => value.exercises);
+    const exercises = course.parts.map((value) => value.exercises);
     return <p>Number of exercises {exercises.reduce(sum, 0)}</p>
+}
+
+const Course = ({course}) => (
+    <div>
+        <Header course={course} />
+        <Content course={course} />
+        <Total course={course} />
+    </div>
+)
+
+const Counter = () => {
+    const [ counter, setCounter ] = useState(0);
+
+    const increaseByOne = () => setCounter(counter + 1);
+    const resetCounter = () => setCounter(0);
+    return (
+        <>
+            <button onClick={increaseByOne}>
+                +
+            </button>
+            <button onClick={resetCounter}>
+                Reset
+            </button>
+            <p>Count: {counter}</p>
+        </>
+    )
 }
 
 const App = () => {
@@ -46,11 +72,14 @@ const App = () => {
 
     return (
         <div>
-            <Header course={course} />
-            <Content course={course} />
-            <Total course={course} />
+            <Course course={course} />
+            <hr />
+            <Counter />
         </div>
+        
     )
 }
 
-ReactDOM.render(<App />, document.getElementById('root'))
+let counter = 1;
+
+ReactDOM.render(<App counter={counter} />, document.getElementById('root'));
