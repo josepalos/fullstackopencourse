@@ -17,16 +17,18 @@ const Statistics = ({counters}) => {
   )
 
   const all = sumCounters(counters);
-  let average = 0;
-  let positive = 0;
-  if(all !== 0){
-    const scores = counters.map((value) => value.count * value.weight)
-    average = scores.reduce((a, b) => a+b, 0) / all;
-    const positive_counters = counters.filter((value) => value.weight > 0);
-    positive = sumCounters(positive_counters) / all;
+
+  if (all == 0){
+    return <p>No feedback given</p>
   }
 
+  const scores = counters.map((value) => value.count * value.weight)
+  const average = scores.reduce((a, b) => a+b, 0) / all;
+  const positive_counters = counters.filter((value) => value.weight > 0);
+  const positive = sumCounters(positive_counters) / all;
+
   return <>
+    {counters.map((counter) => <Counter counter={counter} />)}
     <p>All: {all}</p>
     <p>Average: {average}</p>
     <p>Positive: {positive} %</p>
@@ -65,8 +67,6 @@ const App = () => {
       {counters.map((counter) => <VoteButton counter={counter} />)}
 
       <h1>Statistics</h1>
-      {counters.map((counter) => <Counter counter={counter} />)}
-
       <Statistics counters={counters} />
     </>
   )
