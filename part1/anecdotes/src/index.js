@@ -7,6 +7,23 @@ const Button = ({text, action}) => (
     </button>
 )
 
+const MostUpvotedQuote = ({anecdotes, points}) => {
+    const get_most_voted_anecdote = () => {
+        let max_indice = points.indexOf(Math.max(...points));
+        return [anecdotes[max_indice], points[max_indice]];
+    }
+
+    const [most_voted_anecdote, most_upvotes] = get_most_voted_anecdote()
+
+    return ( 
+        <div>
+            <h1>Quote with most upvotes</h1>
+            <blockquote>{most_voted_anecdote}</blockquote>
+            <p>It has {most_upvotes} votes</p>
+        </div>
+    )
+}
+
 const App = (props) => {
     const set_initial_points = () => {
         let p = []
@@ -32,12 +49,13 @@ const App = (props) => {
 
     return (
         <div>
-            <p>{props.anecdotes[selected]}</p>
+            <blockquote>{props.anecdotes[selected]}</blockquote>
             <p>This anecdote has {points[selected]} upvotes</p>
             <div>
                 <Button text="Get random quote" action={set_random_quote} />
                 <Button text="Vote" action={upvote} />
             </div>
+            <MostUpvotedQuote anecdotes={anecdotes} points={points}/>
         </div>
     )
 }
