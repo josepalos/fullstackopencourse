@@ -8,7 +8,14 @@ const VoteButton = ({counter}) => (
 )
 
 const Counter = ({counter}) => (
-  <p>{counter.name}: {counter.count}</p>
+  <Statistic name={counter.name} value={counter.count} />
+)
+
+const Statistic = ({name, value}) => (
+  <tr>
+    <td>{name}</td>
+    <td>{value}</td>
+  </tr>
 )
 
 const Statistics = ({counters}) => {
@@ -18,8 +25,11 @@ const Statistics = ({counters}) => {
 
   const all = sumCounters(counters);
 
-  if (all == 0){
-    return <p>No feedback given</p>
+  if (all === 0){
+    return <div>
+      <h1>Statistics</h1>
+      <p>No feedback given</p>
+    </div>
   }
 
   const scores = counters.map((value) => value.count * value.weight)
@@ -27,12 +37,17 @@ const Statistics = ({counters}) => {
   const positive_counters = counters.filter((value) => value.weight > 0);
   const positive = sumCounters(positive_counters) / all;
 
-  return <>
-    {counters.map((counter) => <Counter counter={counter} />)}
-    <p>All: {all}</p>
-    <p>Average: {average}</p>
-    <p>Positive: {positive} %</p>
-  </>
+  return <div>
+    <h1>Statistics</h1>
+    <table>
+      <tbody>
+        {counters.map((counter) => <Counter key={counter.name} counter={counter} />)}
+        <Statistic name="All" value={all} />
+        <Statistic name="Average" value={average} />
+        <Statistic name="Positive" value={positive} />
+      </tbody>
+    </table>
+  </div>
 }
 
 const App = () => {
@@ -64,9 +79,8 @@ const App = () => {
   return (
     <>
       <h1>Give feedback</h1>
-      {counters.map((counter) => <VoteButton counter={counter} />)}
-
-      <h1>Statistics</h1>
+      {counters.map((counter) => <VoteButton key={counter.name} counter={counter} />)}
+      
       <Statistics counters={counters} />
     </>
   )
