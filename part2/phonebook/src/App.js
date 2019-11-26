@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import personService from './services/person';
 
 import PersonsInfo from './components/PersonsInfo';
 import NewPersonForm from './components/NewPersonForm';
@@ -7,8 +7,10 @@ import PersonsFilter from './components/PersonsFilter';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
-  const [newName, setNewName] = useState('');
-  const [newPhone, setNewPhone] = useState('');
+  const [newData, setNewData] = useState({
+    name: '',
+    phone: '',
+  });
   const [filter, setFilter] = useState('');
 
   const persons_to_show = persons.filter(
@@ -17,6 +19,14 @@ const App = () => {
 
   const handleFormVar = (setter) => (event) => {
     setter(event.target.value);
+  }
+
+  const setNewName = (name) => {
+    console.log("jeje");
+    setNewData({...newData, name})
+  }
+  const setNewPhone = (phone) => {
+    setNewData({...newData, phone})
   }
 
   const validatePerson = (person) => {
@@ -32,18 +42,13 @@ const App = () => {
   
   const addNewPerson = (event) => {
     event.preventDefault();
-    const person = {
-      name: newName,
-      phone: newPhone,
-    }
-
+    const person = newData;
     try {
       validatePerson(person);
 
-      person.id = persons.length;
+      person.id = persons.length + 1;
       setPersons(persons.concat(person));
-      setNewName('');
-      setNewPhone('');
+      setNewData({name: '', phone: ''})
     } catch (e) {
       console.log(e);
       alert(e);
@@ -51,11 +56,8 @@ const App = () => {
   }
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
-      })
+    personService.getAll()
+      .then(setPersons)
   }, []);
 
   return (
@@ -69,8 +71,7 @@ const App = () => {
         addPerson={addNewPerson}
         onNameChange={handleFormVar(setNewName)}
         onPhoneChange={handleFormVar(setNewPhone)}
-        newName={newName}
-        newPhone={newPhone}
+        newData={newData}
       />
       <PersonsInfo persons={persons_to_show}/>
     </div>
