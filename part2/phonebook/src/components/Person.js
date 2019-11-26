@@ -1,9 +1,14 @@
 import React from 'react';
 
 const Person = ({person}) => (
-    <div>
-        {person.name}
-    </div>
+    <tr>
+        <td>
+            {person.name}
+        </td>
+        <td>
+            {person.phone}
+        </td>
+    </tr>
 )
 
 export default Person;

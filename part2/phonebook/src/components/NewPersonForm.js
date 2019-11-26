@@ -2,38 +2,52 @@ import React, { useState } from 'react';
 
 const NewPersonForm = ({addNewPerson}) => {
   const [newName, setNewName] = useState('');
+  const [newPhone, setNewPhone] = useState('');
 
   const addPerson = (event) => {
     event.preventDefault();
-    if (newName === ''){
-      console.log("Empty name");
-      return
+    const new_person = {
+      name: newName,
+      phone: newPhone,
     }
 
-    const new_person = {
-      name: newName
-    }
-    addNewPerson(new_person);
-    setNewName('');
+    try{
+      addNewPerson(new_person);
+
+      setNewName('');
+      setNewPhone('');
+    } catch (e) {
+      console.log(e);
+      alert(e);
+    }    
   }
 
-  const handleNameChange = (event) => {
-    setNewName(event.target.value);
+  const handleFormVar = (setter) => (event) => {
+    setter(event.target.value);
   }
 
   return (
     <form onSubmit={addPerson}>
       <div>
-        <span>name: </span>
+        <span>Name: </span>
         <span>
           <input
             value={newName}
-            onChange={handleNameChange}
+            onChange={handleFormVar(setNewName)}
           />
         </span>
       </div>
       <div>
-        <button type="submit">add</button>
+        <span>Number: </span>
+        <span>
+          <input 
+            value={newPhone}
+            onChange={handleFormVar(setNewPhone)}
+          />
+        </span>
+      </div>
+      <div>
+        <button type="submit">Add</button>
       </div>
     </form>
   )
