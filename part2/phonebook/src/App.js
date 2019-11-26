@@ -22,7 +22,6 @@ const App = () => {
   }
 
   const setNewName = (name) => {
-    console.log("jeje");
     setNewData({...newData, name})
   }
   const setNewPhone = (phone) => {
@@ -30,28 +29,45 @@ const App = () => {
   }
 
   const validatePerson = (person) => {
-    let all_names = persons.map(p => p.name);
     if (person.name === '') {
       throw new Error("Name cannot be empty");
-    } else if (all_names.indexOf(person.name) !== -1) {
-      throw new Error(`Name ${person.name} already in the phonebook`);
     }
-
-
   }
   
   const addNewPerson = (event) => {
     event.preventDefault();
-    const person = newData;
+    validatePerson(newData);
     try {
-      validatePerson(person);
+      const existing_person = persons.find(p => p.name === newData.name);
 
-      person.id = persons.length + 1;
-      setPersons(persons.concat(person));
-      setNewData({name: '', phone: ''})
+      if(existing_person !== undefined){
+        updatePerson({...newData, id: existing_person.id});
+      }else{
+        personService.create(newData)
+          .then(person => {
+            setPersons(persons.concat(person));
+            setNewData({name: '', phone: ''})
+        })
+      }
     } catch (e) {
       console.log(e);
       alert(e);
+    }
+  }
+
+  const updatePerson = (person) => {
+    if(window.confirm(`${person.name} already exists. Do you want to update the phone number?`)){
+      personService.update(person)
+        .then(person => setPersons(
+          persons.map(p => p.name === person.name ? person : p))
+        )
+    }
+  }
+
+  const deletePerson = (person) => () => {
+    if(window.confirm(`Are you sure you want to delete ${person.name}?`)){
+      personService.remove(person);
+      setPersons(persons.filter(p => p.id !== person.id));
     }
   }
 
@@ -73,7 +89,7 @@ const App = () => {
         onPhoneChange={handleFormVar(setNewPhone)}
         newData={newData}
       />
-      <PersonsInfo persons={persons_to_show}/>
+      <PersonsInfo persons={persons_to_show} deletePerson={deletePerson}/>
     </div>
   )
 }
