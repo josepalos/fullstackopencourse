@@ -1,55 +1,33 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-const NewPersonForm = ({addNewPerson}) => {
-  const [newName, setNewName] = useState('');
-  const [newPhone, setNewPhone] = useState('');
-
-  const addPerson = (event) => {
-    event.preventDefault();
-    const new_person = {
-      name: newName,
-      phone: newPhone,
-    }
-
-    try{
-      addNewPerson(new_person);
-
-      setNewName('');
-      setNewPhone('');
-    } catch (e) {
-      console.log(e);
-      alert(e);
-    }    
-  }
-
-  const handleFormVar = (setter) => (event) => {
-    setter(event.target.value);
-  }
-
+const NewPersonForm = ({ addPerson, onNameChange, onPhoneChange, newName, newPhone }) => {
   return (
-    <form onSubmit={addPerson}>
-      <div>
-        <span>Name: </span>
-        <span>
-          <input
-            value={newName}
-            onChange={handleFormVar(setNewName)}
-          />
-        </span>
-      </div>
-      <div>
-        <span>Number: </span>
-        <span>
-          <input 
-            value={newPhone}
-            onChange={handleFormVar(setNewPhone)}
-          />
-        </span>
-      </div>
-      <div>
-        <button type="submit">Add</button>
-      </div>
-    </form>
+    <div>
+      <h2>Add new person</h2>
+      <form onSubmit={addPerson}>
+        <div>
+          <span>Name: </span>
+          <span>
+            <input
+              value={newName}
+              onChange={onNameChange}
+            />
+          </span>
+        </div>
+        <div>
+          <span>Number: </span>
+          <span>
+            <input
+              value={newPhone}
+              onChange={onPhoneChange}
+            />
+          </span>
+        </div>
+        <div>
+          <button type="submit">Add</button>
+        </div>
+      </form>
+    </div>
   )
 }
 
