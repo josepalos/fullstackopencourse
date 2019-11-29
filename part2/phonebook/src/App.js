@@ -4,6 +4,7 @@ import personService from './services/person';
 import PersonsInfo from './components/PersonsInfo';
 import NewPersonForm from './components/NewPersonForm';
 import PersonsFilter from './components/PersonsFilter';
+import {SuccessNotification, ErrorNotification} from './components/Notification';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -12,6 +13,23 @@ const App = () => {
     phone: '',
   });
   const [filter, setFilter] = useState('');
+  const [successMessage, setSuccessMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
+
+
+  const showSuccessNotification = (message) => {
+    setSuccessMessage(message);
+    setTimeout(() => {
+      setSuccessMessage(null);
+    }, 5000);
+  }
+  
+  const showErrorNotification = (message) => {
+    setErrorMessage(message);
+    setTimeout(() => {
+      setErrorMessage(message);
+    }, 5000);
+  }
 
   const persons_to_show = persons.filter(
     (person) => person.name.toLowerCase().includes(filter.toLowerCase())
@@ -47,26 +65,32 @@ const App = () => {
           .then(person => {
             setPersons(persons.concat(person));
             setNewData({name: '', phone: ''})
-        })
+            showSuccessNotification(`Person ${person.name} added`);
+          })
+          .catch(error => showErrorNotification(`Error adding person ${newData.name}: ${error}`));
       }
-    } catch (e) {
-      console.log(e);
-      alert(e);
+    } catch (error) {
+      showErrorNotification(`${error}`);
     }
   }
 
   const updatePerson = (person) => {
     if(window.confirm(`${person.name} already exists. Do you want to update the phone number?`)){
       personService.update(person)
-        .then(person => setPersons(
-          persons.map(p => p.name === person.name ? person : p))
-        )
+        .then(person => {
+          setPersons(persons.map(p => p.name === person.name ? person : p));
+          showSuccessNotification(`Person ${person.name} updated`);
+          setNewData({name: '', phone: ''})
+        })
+        .catch(error => showSuccessNotification(`Error updating person ${person.name}: ${error}`))
     }
   }
 
   const deletePerson = (person) => () => {
     if(window.confirm(`Are you sure you want to delete ${person.name}?`)){
-      personService.remove(person);
+      personService.remove(person)
+        .then(() => showSuccessNotification(`Person ${person.name} successfully removed`))
+        .catch(error => showErrorNotification(`Error deleting person ${person.name}: ${error}`));
       setPersons(persons.filter(p => p.id !== person.id));
     }
   }
@@ -79,6 +103,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <SuccessNotification message={successMessage} /> {/* TODO set timer */}
+      <ErrorNotification message={errorMessage} />
       <PersonsFilter
         filter={filter}
         setFilter={setFilter}
