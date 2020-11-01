@@ -14,7 +14,7 @@ const personSchema = new mongoose.Schema({
     phone: String,
 });
 
-const Person = mongoose.model('Person', noteSchema);
+const Person = mongoose.model('Person', personSchema);
 
 function add_new_person(name, phone) {
     const new_person = new Person({
