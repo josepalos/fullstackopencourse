@@ -9,13 +9,13 @@ const Person = require("./models/person");
 
 
 // Configure logging
-morgan.token('post-data', function (req, res) { return JSON.stringify(req.body) })
+morgan.token("post-data", req => JSON.stringify(req.body));
 
 // Use statics to load frontend if exists
-app.use(express.static('build'))
-app.use(cors())
-app.use(bodyParser.json())
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms :post-data'))
+app.use(express.static("build"));
+app.use(cors());
+app.use(bodyParser.json());
+app.use(morgan(":method :url :status :res[content-length] - :response-time ms :post-data"));
 
 // Routes
 app.get("/api/persons", (request, response, next) => {
@@ -32,7 +32,7 @@ app.get("/api/persons/:id", (request, response, next) => {
 			if (person) {
 				response.json(person);
 			} else {
-				response.status(404).end(`Could not find person ${identifier}`);
+				response.status(404).end(`Could not find person ${request.params.id}`);
 			}
 		})
 		.catch(error => next(error));
@@ -114,7 +114,7 @@ app.put("/api/persons/:id", (request, response, next) => {
 		.catch(error => next(error));
 });
 
-app.get("/info", (request, response) => {
+app.get("/info", (request, response, next) => {
 	Person.estimatedDocumentCount()
 		.then(count => {
 			const content = `<p>Phonebook has info for ${count} people</p>` +
@@ -126,25 +126,25 @@ app.get("/info", (request, response) => {
 
 // Define custom middlewares
 const unknownEndpoint = (request, response) => {
-	response.status(404).send({ error: 'Unknown endpoint' });
-}
+	response.status(404).send({ error: "Unknown endpoint" });
+};
 app.use(unknownEndpoint);
 
 const errorHandler = (error, request, response, next) => {
 	console.error(error.message);
 
-	if (error.name === 'CastError') {
+	if (error.name === "CastError") {
 		return response.status(400).send({ error: "Malformatted id" });
 	} else if (error.name === "ValidationError") {
 		return response.status(400).json({ error: error.message });
 	}
 
 	next(error);
-}
+};
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {
-	console.log(`Server running on port ${PORT}`)
-})
+	console.log(`Server running on port ${PORT}`);
+});
