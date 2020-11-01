@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const uniqueValidator = require("mongoose-unique-validator");
 
 const url = process.env.MONGO_URI || "mongodb://localhost/fullstackcourse";
 
@@ -19,9 +20,24 @@ mongoose.connect(url, configuration)
     });
 
 const personSchema = new mongoose.Schema({
-    name: String,
-    phone: String,
+    name: {
+        type: String,
+        required: true,
+        minlength: 3,
+        unique: true,
+    },
+    phone: {
+        type: String,
+        required: true,
+        validate: {
+            validator: (v) => {
+                return v.replace(/[^0-9]/g, "").length >= 8
+            }
+        },
+        unique: false,
+    }
 });
+personSchema.plugin(uniqueValidator);
 
 personSchema.set('toJSON', {
 	transform: (document, returnedObject) => {

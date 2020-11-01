@@ -41,7 +41,11 @@ app.get("/api/persons/:id", (request, response, next) => {
 app.delete("/api/persons/:id", (request, response, next) => {
 	Person.findByIdAndRemove(request.params.id)
 		.then(result => {
-			response.status(204).end();
+			if (result) {
+				response.status(204).end();
+			} else {
+				response.status(404).end();
+			}
 		})
 		.catch(error => next(error));
 });
@@ -70,7 +74,6 @@ function addPerson(content) {
 	});
 }
 
-
 app.post("/api/persons", (request, response, next) => {
 	const content = request.body;
 
@@ -80,6 +83,8 @@ app.post("/api/persons", (request, response, next) => {
 		return response.status(400).json({ error: "phone missing" });
 	}
 
+	/*
+	// Exercise 3.17
 	Person.findOne({name: content.name})
 		.then(foundPerson => {
 			if(foundPerson){
@@ -93,6 +98,12 @@ app.post("/api/persons", (request, response, next) => {
 					.catch(error => next(error));
 			}
 		})
+		.catch(error => next(error));
+	*/
+
+	// Exercise 3.19
+	addPerson(content)
+		.then(savedPerson => response.json(savedPerson))
 		.catch(error => next(error));
 });
 
@@ -110,7 +121,7 @@ app.get("/info", (request, response) => {
 				`<p>${new Date(Date.now()).toISOString()}</p>`;
 			response.send(content);
 		})
-		.catch(error => next(error));	
+		.catch(error => next(error));
 });
 
 // Define custom middlewares
@@ -124,6 +135,8 @@ const errorHandler = (error, request, response, next) => {
 
 	if (error.name === 'CastError') {
 		return response.status(400).send({ error: "Malformatted id" });
+	} else if (error.name === "ValidationError") {
+		return response.status(400).json({ error: error.message });
 	}
 
 	next(error);
