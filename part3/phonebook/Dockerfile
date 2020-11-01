@@ -10,17 +10,17 @@ RUN npm install --silent  --production
 RUN npm install react-scripts@3.0.1 -g --silent
 
 # Copy the backend
-COPY backend/* /app/
+COPY backend /app/
 
 # Build the frontend
 WORKDIR /frontend
 COPY frontend/package.json /frontend/package.json
 RUN npm install --silent --production
 
-COPY frontend/ /frontend/
+COPY frontend /frontend/
 
 RUN npm run build
-RUN mv /frontend/build /app/
+RUN mv /frontend/build /app/build
 
 WORKDIR /app
 RUN rm -rf /frontend
