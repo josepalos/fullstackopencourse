@@ -156,8 +156,10 @@ Path: part2/blog_list
 Related exercises:
 - [x] 4.1
 - [x] 4.2
-- [x] 4.3 <- test suite initial
-- [x] 4.4 <- test totalLikes
-- [x] 4.5 <- test favoriteBlog
-- [x] 4.6 <- test most blogs
-- [x] 4.7 <- test most likes
+- [x] 4.3
+- [x] 4.4
+- [x] 4.5
+- [x] 4.6
+- [x] 4.7
+- [x] 4.8 <- http get blog test + async/await
+- [ ] 4.9 <- Blog list tests 2
