@@ -113,6 +113,38 @@ describe("test create blogs", () => {
     });
 });
 
+describe("Test when deleting a blog", () => {
+    beforeEach(async () => {
+        const newBlogs = listWithSixBlogs.map(blog => new Blog(blog));
+        const promiseArray = newBlogs.map(blog => blog.save());
+        await Promise.all(promiseArray);
+    });
+
+    test("the blog is deleted", async () => {
+        const id_to_delete = listWithSixBlogs[0]._id;
+
+        await api
+            .delete(`/api/blogs/${id_to_delete}`)
+            .expect(204);
+        
+        const response = await api.get("/api/blogs");
+        const ids = response.body.map(r => r.id);
+        expect(ids).not.toContain(id_to_delete);
+
+    });
+
+    test("the number of blogs is reduced by one", async () => {
+        let response = await api.get("/api/blogs");
+        const before = response.body.length;
+
+        const id_to_delete = listWithSixBlogs[0]._id;
+        await api.delete(`/api/blogs/${id_to_delete}`);
+        
+        response = await api.get("/api/blogs");
+        expect(response.body).toHaveLength(before - 1);
+    });
+});
+
 
 
 afterAll(() => {

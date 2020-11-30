@@ -165,4 +165,6 @@ Related exercises:
 - [x] 4.9
 - [x] 4.10
 - [x] 4.11
-- [ ] 4.12
+- [x] 4.12
+- [x] 4.13
+- [x] 4.14 TODO: missing tests
