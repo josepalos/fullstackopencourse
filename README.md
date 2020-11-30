@@ -161,5 +161,5 @@ Related exercises:
 - [x] 4.5
 - [x] 4.6
 - [x] 4.7
-- [x] 4.8 <- http get blog test + async/await
+- [x] 4.8
 - [ ] 4.9 <- Blog list tests 2
