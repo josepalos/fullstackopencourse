@@ -162,4 +162,7 @@ Related exercises:
 - [x] 4.6
 - [x] 4.7
 - [x] 4.8
-- [ ] 4.9 <- Blog list tests 2
+- [x] 4.9
+- [x] 4.10
+- [x] 4.11
+- [ ] 4.12
