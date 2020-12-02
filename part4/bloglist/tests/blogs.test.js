@@ -1,5 +1,5 @@
 const listHelper = require("../utils/list_helper");
-const {listWithOneBlog, listWithSixBlogs} = require("./test_helper.js");
+const {listWithOneBlog, listWithSixBlogs, initialUsers} = require("./test_helper.js");
 
 test("dummy returns one", () => {
 	const blogs = [];
@@ -31,7 +31,8 @@ describe("favorite blog", () => {
 		expect(result).toEqual({
 			title: "Canonical string reduction",
 			author: "Edsger W. Dijkstra",
-			likes: 12
+			likes: 12,
+			user: initialUsers[0]._id,
 		});
 	});
 });

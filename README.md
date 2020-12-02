@@ -167,4 +167,12 @@ Related exercises:
 - [x] 4.11
 - [x] 4.12
 - [x] 4.13
-- [x] 4.14 TODO: missing tests
+- [x] 4.14
+- [x] 4.15
+- [x] 4.16
+- [x] 4.17 --- Missing tests
+- [x] 4.18 --- Missing tests
+- [x] 4.19 --- Missing tests for posts with no token
+- [x] 4.20
+- [x] 4.21
+- [x] 4.22
