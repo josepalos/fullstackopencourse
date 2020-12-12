@@ -7,6 +7,8 @@ const cors = require("cors");
 
 morgan.token('post-data', function (req, res) { return JSON.stringify(req.body) })
 
+// Use statics to load frontend if exists
+app.use(express.static('build'))
 app.use(cors())
 app.use(bodyParser.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :post-data'))
