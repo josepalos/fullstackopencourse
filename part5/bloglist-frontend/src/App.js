@@ -1,48 +1,77 @@
 import React, { useState, useEffect } from 'react';
+
 import Blog from './components/Blog';
 import LoginForm from './components/LoginForm';
+import SignUpForm from './components/SignUpForm';
+
 import blogService from './services/blogs';
 import loginService from './services/login';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
 
-  const useCredentials = (user) => {
-    setUser(user);
-    blogService.setToken(user.token);
+  // Login state
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  // Signup state
+  const [signupName, setSignupName] = useState("");
+  const [signupUsername, setSignupUsername] = useState("");
+  const [signupPassword, setSignupPassword] = useState("");
+
+  const resetForms = () => {
+    setUsername("");
+    setPassword("");
+    setSignupName("");
+    setSignupUsername("");
+    setSignupPassword("");
   }
   
-  const handleLogin = (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault();
     try{
-      const user = loginService.login({username, password});
-      useCredentials(user);
+      const user = await loginService.login(username, password);
+      setUser(user);
+      blogService.setToken(user.token);
+      console.log(user);
 
       window.localStorage.setItem('loggedBlogsappUser', JSON.stringify(user));
-
-      // Reset the fields of the form
-      setUsername("");
-      setPassword("");
+      resetForms();
     } catch (exception) {
-      // setErrorMessage('Wrong credentials');
-      // setTimeout(() => {setErrorMessage(null)}, 5000);
       console.error("Wrong credentials");
     }
     
   }
 
+  const handleSignUp = async (event) => {
+    event.preventDefault();
+    try{
+      const newUser = await loginService.signUp(signupName, signupUsername, signupPassword);
+      setUser(newUser);
+      blogService.setToken(user.token);
+      console.log(user);
+
+      window.localStorage.setItem('loggedBlogsappUser', JSON.stringify(user));
+      resetForms();
+    }catch (exception) {
+      console.error("Error creating the new user:", exception);
+    }
+  }
+
   const logout = () => {
-    useCredentials(null);
+    setUser(null);
+    blogService.setToken(null);
     window.localStorage.removeItem('loggedBlogsappUser');
   }
 
   // Fetch the blogs
   useEffect(() => {
-    const blogs = await blogService.getAll();
-    setBlogs(blogs);
+    const fetchBlogs = async () => {
+      const blogs = await blogService.getAll();
+      setBlogs(blogs);
+    }
+    fetchBlogs();
   }, []);
 
   // Try to fetch the logged user
@@ -50,15 +79,42 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogsappUser');
     if(loggedUserJSON){
       const user = JSON.parse(loggedUserJSON);
-      useCredentials(user);
+      setUser(user);
+      blogService.setToken(user.token);
     }
   }, []);
 
-  const renderLoginForm = () => <LoginForm setUsername={setUsername} setPassword={setPassword} handleLogin={handleLogin} />;
+  const renderLoginForm = () => <LoginForm username={username}
+                                           setUsername={setUsername}
+                                           password={password}
+                                           setPassword={setPassword}
+                                           handleLogin={handleLogin} />;
+  const renderSignUpForm = () => <SignUpForm name={signupName}
+                                             setName={setSignupName}
+                                             username={signupUsername}
+                                             setUsername={setSignupUsername}
+                                             password={signupPassword}
+                                             setPassword={setSignupPassword}
+                                             handleSignUp={handleSignUp} />;
+
+  const renderForms = () => (
+    <>
+      <div>
+        <h3>Login</h3>
+        {renderLoginForm()}
+      </div>
+      <div>or</div>
+      <div>
+        <h3>Create a new user</h3>
+        {renderSignUpForm()}
+      </div>
+    </>
+  );
+
   const renderMainPage = () => (
     <div>
       <div>
-        <h3>Logged in as {user.name}</h3><button onClick={logout} />
+        <h3>Logged in as {user.name}</h3><button onClick={logout}>Logout</button>
       </div>
       <div>
         {blogs.map(blog =>
@@ -71,7 +127,9 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      {user === null ? renderLoginForm() : renderMainPage() }
+      {user === null
+        ? renderForms()
+        : renderMainPage() }
     </div>
   )
 }
