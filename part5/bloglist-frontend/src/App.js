@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Blogs from './components/Blogs';
 import LoginForm from './components/LoginForm';
 import SignUpForm from './components/SignUpForm';
+import Notifications from './components/notifications/Notifications';
 
 import blogService from './services/blogs';
 import loginService from './services/login';
@@ -24,6 +25,30 @@ const App = () => {
   const [newBlogTitle, setNewBlogTitle] = useState("");
   const [newBlogAuthor, setNewBlogAuthor] = useState("");
   const [newBlogUrl, setNewBlogUrl] = useState("");
+
+  // Notifications
+  const [notifications, setNotifications] = useState([]);
+
+  const newNotification = (text, type) => {
+    const id = Math.random().toString(36).substr(2, 9);
+
+    const newArray = [...notifications, {
+      id: id,
+      text: text,
+      type: type,
+      time: new Date()
+    }];
+    console.log(newArray);
+    setNotifications(newArray);
+
+    setTimeout(() => removeNotification(id), 5000);
+
+    return id;
+  }
+
+  const removeNotification = (id) => {
+    setNotifications(notifications.filter(n => n.id !== id));
+  }
 
   const resetForms = () => {
     setUsername("");
@@ -47,7 +72,7 @@ const App = () => {
       window.localStorage.setItem('loggedBlogsappUser', JSON.stringify(user));
       resetForms();
     } catch (exception) {
-      console.error("Wrong credentials");
+      newNotification("Wrong credentials", "error");
     }
     
   }
@@ -63,15 +88,22 @@ const App = () => {
       window.localStorage.setItem('loggedBlogsappUser', JSON.stringify(user));
       resetForms();
     }catch (exception) {
-      console.error("Error creating the new user:", exception);
+      newNotification("Error creating the new user", "error");
     }
   }
 
   const handleNewBlog = async (event) => {
     event.preventDefault();
-    console.log("Created new blog with title", newBlogTitle, ", author", newBlogAuthor, "and url", newBlogUrl);
-    blogService.create(newBlogTitle, newBlogAuthor, newBlogUrl);
-    resetForms();
+    try{
+      await blogService.create(newBlogTitle, newBlogAuthor, newBlogUrl);
+
+      newNotification(`Created blog ${newBlogTitle}`, "success");
+      console.log("Created new blog with title", newBlogTitle, ", author", newBlogAuthor, "and url", newBlogUrl);
+      resetForms();
+    } catch (error){
+      newNotification("Error creating the blog", "error");
+    }
+
 
     // Reload the blogs list
     const blogs = await blogService.getAll();
@@ -151,6 +183,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
+      <Notifications notifications={notifications} />
       {user === null
         ? renderForms()
         : renderMainPage() }
