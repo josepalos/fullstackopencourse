@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import Blog from './components/Blog';
+import Blogs from './components/Blogs';
 import LoginForm from './components/LoginForm';
 import SignUpForm from './components/SignUpForm';
 
@@ -20,12 +20,20 @@ const App = () => {
   const [signupUsername, setSignupUsername] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
 
+  // New blog state
+  const [newBlogTitle, setNewBlogTitle] = useState("");
+  const [newBlogAuthor, setNewBlogAuthor] = useState("");
+  const [newBlogUrl, setNewBlogUrl] = useState("");
+
   const resetForms = () => {
     setUsername("");
     setPassword("");
     setSignupName("");
     setSignupUsername("");
     setSignupPassword("");
+    setNewBlogTitle("");
+    setNewBlogAuthor("");
+    setNewBlogUrl("");
   }
   
   const handleLogin = async (event) => {
@@ -59,6 +67,17 @@ const App = () => {
     }
   }
 
+  const handleNewBlog = async (event) => {
+    event.preventDefault();
+    console.log("Created new blog with title", newBlogTitle, ", author", newBlogAuthor, "and url", newBlogUrl);
+    blogService.create(newBlogTitle, newBlogAuthor, newBlogUrl);
+    resetForms();
+
+    // Reload the blogs list
+    const blogs = await blogService.getAll();
+    setBlogs(blogs);
+  }
+
   const logout = () => {
     setUser(null);
     blogService.setToken(null);
@@ -84,29 +103,28 @@ const App = () => {
     }
   }, []);
 
-  const renderLoginForm = () => <LoginForm username={username}
-                                           setUsername={setUsername}
-                                           password={password}
-                                           setPassword={setPassword}
-                                           handleLogin={handleLogin} />;
-  const renderSignUpForm = () => <SignUpForm name={signupName}
-                                             setName={setSignupName}
-                                             username={signupUsername}
-                                             setUsername={setSignupUsername}
-                                             password={signupPassword}
-                                             setPassword={setSignupPassword}
-                                             handleSignUp={handleSignUp} />;
-
   const renderForms = () => (
     <>
       <div>
         <h3>Login</h3>
-        {renderLoginForm()}
+        <LoginForm username={username}
+          setUsername={setUsername}
+          password={password}
+          setPassword={setPassword}
+          handleLogin={handleLogin}
+        />;
       </div>
       <div>or</div>
       <div>
         <h3>Create a new user</h3>
-        {renderSignUpForm()}
+        <SignUpForm name={signupName}
+          setName={setSignupName}
+          username={signupUsername}
+          setUsername={setSignupUsername}
+          password={signupPassword}
+          setPassword={setSignupPassword}
+          handleSignUp={handleSignUp}
+        />
       </div>
     </>
   );
@@ -117,9 +135,15 @@ const App = () => {
         <h3>Logged in as {user.name}</h3><button onClick={logout}>Logout</button>
       </div>
       <div>
-        {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
-        )}
+        <Blogs blogs={blogs}
+          handleNewBlog={handleNewBlog}
+          newBlogTitle={newBlogTitle}
+          setNewBlogTitle={setNewBlogTitle}
+          newBlogAuthor={newBlogAuthor}
+          setNewBlogAuthor={setNewBlogAuthor}
+          newBlogUrl={newBlogUrl}
+          setNewBlogUrl={setNewBlogUrl}
+        />
       </div>
     </div>
   );
