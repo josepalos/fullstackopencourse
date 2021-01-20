@@ -105,6 +105,30 @@ const App = () => {
     setBlogs(blogs);
   }
 
+  const handleLikeBlog = async (blogData) => {
+    try{
+      console.log("Liked blog", blogData);
+      await blogService.likeBlog(blogData);
+      const blogs = await blogService.getAll();
+      setBlogs(blogs);
+    } catch (error) {
+      console.error("Error liking the blog:", error);
+    }
+  }
+
+  const handleDeleteBlog = async (blogData) => {
+    if(window.confirm(`Do you want to delete the blog ${blogData.title}?`)){
+      console.log("Delete blog", blogData);
+      try{
+        await blogService.deleteBlog(blogData.id);
+        const blogs = await blogService.getAll();
+        setBlogs(blogs);
+      } catch (error) {
+        console.error("Error liking the blog:", error);
+      }
+    }
+  }
+
   const logout = () => {
     setUser(null);
     blogService.setToken(null);
@@ -162,7 +186,7 @@ const App = () => {
         <h3>Logged in as {user.name}</h3><button onClick={logout}>Logout</button>
       </div>
       <div>
-        <Blogs blogs={blogs} handleNewBlog={handleNewBlog} newBlogRef={newBlogRef} />
+        <Blogs blogs={blogs} handleNewBlog={handleNewBlog} newBlogRef={newBlogRef} likeBlogAction={handleLikeBlog} deleteBlogAction={handleDeleteBlog} />
       </div>
     </div>
   );
