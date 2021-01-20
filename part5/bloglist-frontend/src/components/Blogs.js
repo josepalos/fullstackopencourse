@@ -1,7 +1,7 @@
-import React from 'react';
-import BlogForm from './BlogForm';
-import Blog from './Blog';
-import Toggleable from './Toggleable';
+import React from "react";
+import BlogForm from "./BlogForm";
+import Blog from "./Blog";
+import Toggleable from "./Toggleable";
 
 
 const Blogs = ({ blogs, handleNewBlog, newBlogRef, likeBlogAction, deleteBlogAction }) => {
@@ -15,7 +15,7 @@ const Blogs = ({ blogs, handleNewBlog, newBlogRef, likeBlogAction, deleteBlogAct
         <div>
             {blogs.sort(sorterFunc).map(renderBlog)}
         </div>
-    </>
+    </>;
 };
 
 export default Blogs;
