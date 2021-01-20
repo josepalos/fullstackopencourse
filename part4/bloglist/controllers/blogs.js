@@ -52,8 +52,8 @@ blogsRouter.put("/:id",
 				.status(400)
 				.json({error: "Unexpected fields: " + unwanted})
 		}
-
-		const blog = await Blog.findOneAndUpdate(request.params.id, updatedBlog, {new: true });
+		console.log(request.params.id);
+		const blog = await Blog.findByIdAndUpdate(request.params.id, updatedBlog, {new: true });
 		response.json(blog);
 });
 
