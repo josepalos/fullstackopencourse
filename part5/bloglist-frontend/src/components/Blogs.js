@@ -1,31 +1,15 @@
 import React from 'react';
 import BlogForm from './BlogForm';
 import Blog from './Blog';
-
+import Toggleable from './Toggleable';
 
 const renderBlog = (blog) => <Blog key={blog.id} blog={blog} />;
 
-const Blogs = ({
-    blogs,
-    handleNewBlog,
-    newBlogTitle,
-    setNewBlogTitle,
-    newBlogAuthor,
-    setNewBlogAuthor,
-    newBlogUrl,
-    setNewBlogUrl
-}) => (
+const Blogs = ({ blogs, handleNewBlog, newBlogRef }) => (
     <>
-        <div>
-            <BlogForm handleNewBlog={handleNewBlog}
-                title={newBlogTitle}
-                setTitle={setNewBlogTitle}
-                author={newBlogAuthor}
-                setAuthor={setNewBlogAuthor}
-                url={newBlogUrl}
-                setUrl={setNewBlogUrl}
-            />
-        </div>
+        <Toggleable buttonLabel="New form" ref={newBlogRef}>
+            <BlogForm handleNewBlog={handleNewBlog} />
+        </Toggleable>
         <div>
             {blogs.map(renderBlog)}
         </div>

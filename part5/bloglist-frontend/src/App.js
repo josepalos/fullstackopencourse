@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import Blogs from './components/Blogs';
 import LoginForm from './components/LoginForm';
 import SignUpForm from './components/SignUpForm';
 import Notifications from './components/notifications/Notifications';
+import Toggleable from './components/Toggleable';
 
 import blogService from './services/blogs';
 import loginService from './services/login';
@@ -21,13 +22,11 @@ const App = () => {
   const [signupUsername, setSignupUsername] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
 
-  // New blog state
-  const [newBlogTitle, setNewBlogTitle] = useState("");
-  const [newBlogAuthor, setNewBlogAuthor] = useState("");
-  const [newBlogUrl, setNewBlogUrl] = useState("");
-
   // Notifications
   const [notifications, setNotifications] = useState([]);
+
+  // References
+  const newBlogRef = useRef();
 
   const newNotification = (text, type) => {
     const id = Math.random().toString(36).substr(2, 9);
@@ -56,9 +55,6 @@ const App = () => {
     setSignupName("");
     setSignupUsername("");
     setSignupPassword("");
-    setNewBlogTitle("");
-    setNewBlogAuthor("");
-    setNewBlogUrl("");
   }
   
   const handleLogin = async (event) => {
@@ -92,14 +88,13 @@ const App = () => {
     }
   }
 
-  const handleNewBlog = async (event) => {
-    event.preventDefault();
+  const handleNewBlog = async (title, author, url) => {
     try{
-      await blogService.create(newBlogTitle, newBlogAuthor, newBlogUrl);
+      await blogService.create(title, author, url);
 
-      newNotification(`Created blog ${newBlogTitle}`, "success");
-      console.log("Created new blog with title", newBlogTitle, ", author", newBlogAuthor, "and url", newBlogUrl);
-      resetForms();
+      newNotification(`Created blog ${title}`, "success");
+      console.log("Created new blog with title", title, ", author", author, "and url", url);
+      newBlogRef.current.toggleVisibility();
     } catch (error){
       newNotification("Error creating the blog", "error");
     }
@@ -137,17 +132,17 @@ const App = () => {
 
   const renderForms = () => (
     <>
-      <div>
+      <Toggleable showButtonLabel="Login" hideButtonLabel="Cancel">
         <h3>Login</h3>
         <LoginForm username={username}
-          setUsername={setUsername}
+          handleUsernameChange={({target}) => setUsername(target.value)}
           password={password}
-          setPassword={setPassword}
+          handlePasswordChange={({target}) => setPassword(target.value)}
           handleLogin={handleLogin}
-        />;
-      </div>
-      <div>or</div>
-      <div>
+        />
+      </Toggleable>
+
+      <Toggleable showButtonLabel="Sign up" hideButtonLabel="Cancel">
         <h3>Create a new user</h3>
         <SignUpForm name={signupName}
           setName={setSignupName}
@@ -157,7 +152,7 @@ const App = () => {
           setPassword={setSignupPassword}
           handleSignUp={handleSignUp}
         />
-      </div>
+      </Toggleable>
     </>
   );
 
@@ -167,15 +162,7 @@ const App = () => {
         <h3>Logged in as {user.name}</h3><button onClick={logout}>Logout</button>
       </div>
       <div>
-        <Blogs blogs={blogs}
-          handleNewBlog={handleNewBlog}
-          newBlogTitle={newBlogTitle}
-          setNewBlogTitle={setNewBlogTitle}
-          newBlogAuthor={newBlogAuthor}
-          setNewBlogAuthor={setNewBlogAuthor}
-          newBlogUrl={newBlogUrl}
-          setNewBlogUrl={setNewBlogUrl}
-        />
+        <Blogs blogs={blogs} handleNewBlog={handleNewBlog} newBlogRef={newBlogRef} />
       </div>
     </div>
   );

@@ -1,7 +1,19 @@
-import React from 'react';
+import React, {useState} from 'react';
 
-const BlogForm = ({ handleNewBlog, title, setTitle, author, setAuthor, url, setUrl }) => (
-    <form onSubmit={handleNewBlog}>
+const BlogForm = ({ handleNewBlog }) => {
+    const [title, setTitle] = useState("");
+    const [author, setAuthor] = useState("");
+    const [url, setUrl] = useState("");
+
+    const newBlog = (event) => {
+        event.preventDefault();
+        handleNewBlog(title, author, url);
+        setTitle("");
+        setAuthor("");
+        setUrl("");
+    }
+
+    return <form onSubmit={newBlog}>
         <div>
             <label htmlFor="title">Title: </label>
             <input type="text"
@@ -28,6 +40,6 @@ const BlogForm = ({ handleNewBlog, title, setTitle, author, setAuthor, url, setU
         </div>
         <button type="submit">Create blog</button>
   </form>
-)
+}
 
 export default BlogForm;
