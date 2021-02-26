@@ -149,9 +149,10 @@ $ npm start
 ```
 
 ## Blog list
-Parts: part 4
+Parts: part 4, 5
 
-Path: part2/blog_list
+### Part 4
+Path: part4/blog_list
 
 Related exercises:
 - [x] 4.1
@@ -176,3 +177,22 @@ Related exercises:
 - [x] 4.20
 - [x] 4.21
 - [x] 4.22
+
+### Part 5
+Path: part4/bloglist-frontend
+- [x] 5.1
+- [x] 5.2
+- [x] 5.3
+- [x] 5.4
+- [x] 5.5
+- [x] 5.6
+- [x] 5.7
+- [x] 5.8
+- [x] 5.9
+- [x] 5.10
+- [x] 5.11
+- [x] 5.12
+- [x] 5.13
+- [x] 5.14
+- [x] 5.15
+- [x] 5.16
