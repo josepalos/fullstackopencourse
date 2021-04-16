@@ -179,7 +179,8 @@ Related exercises:
 - [x] 4.22
 
 ### Part 5
-Path: part4/bloglist-frontend
+Backend path: part4/bloglist
+Frontend path: part5/bloglist-frontend
 - [x] 5.1
 - [x] 5.2
 - [x] 5.3
@@ -196,3 +197,9 @@ Path: part4/bloglist-frontend
 - [x] 5.14
 - [x] 5.15
 - [x] 5.16
+- [x] 5.17
+- [x] 5.18
+- [x] 5.19
+- [x] 5.20
+- [x] 5.21
+- [ ] 5.22

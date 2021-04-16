@@ -8,7 +8,7 @@ const LoginForm = ({
     password,
     handlePasswordChange
 }) => (
-    <form onSubmit={handleLogin}>
+    <form onSubmit={handleLogin} className="login-form">
         <div>
             <label htmlFor="username">Username: </label>
             <input type="text"
