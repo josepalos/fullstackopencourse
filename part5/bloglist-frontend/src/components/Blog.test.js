@@ -22,7 +22,7 @@ describe("Blog component", () => {
         );
     });
 
-    test("renders the title and author", () => {    
+    test("renders the title and author", () => {
         expect(component.container).toHaveTextContent(
             `${blog.title}; by ${blog.author}`
         );
@@ -42,7 +42,7 @@ describe("Blog component", () => {
         expect(component.container.querySelector(".blog-url")).toHaveTextContent(blog.url);
         expect(component.container.querySelector(".blog-likes")).toHaveTextContent(blog.likes);
     });
-    
+
     test("calls likeBlogAction once when the like button is clicked", () => {
         likeBlogAction = jest.fn();
 

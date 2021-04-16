@@ -202,4 +202,4 @@ Frontend path: part5/bloglist-frontend
 - [x] 5.19
 - [x] 5.20
 - [x] 5.21
-- [ ] 5.22
+- [x] 5.22
