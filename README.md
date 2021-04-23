@@ -232,3 +232,10 @@ Path: part6/redux-anecdotes
 - [x] 6.19
 - [x] 6.20
 - [x] 6.21
+
+## Anecdotes (routed version)
+Parts: part7
+Path: part7/routed-anecdotes
+- [x] 7.1
+- [x] 7.2
+- [x] 7.3
