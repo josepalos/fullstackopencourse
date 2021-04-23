@@ -8,7 +8,7 @@ const Anecdote = ({ anecdote }) => {
     const vote = (anecdote) => {
         console.log('vote', anecdote.id);
         dispatch(voteAnecdote(anecdote));
-        dispatch(notify(`You vote ${anecdote.content}`, 5000));
+        dispatch(notify(`You voted "${anecdote.content}"`, 5000));
     }
 
     return (

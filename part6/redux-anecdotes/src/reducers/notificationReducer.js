@@ -1,24 +1,41 @@
-const initialState = "";
+const initialState = {
+    text: "",
+    hidden: true,
+    timeout_id: undefined
+};
 
 const reducer = (state = initialState, action) => {
     switch(action.type){
         case "NOTIFY":
-            return action.text;
+            if(state.timeout_id !== undefined){
+                // Avoid the previous notifications to hide the new one
+                clearTimeout(state.timeout_id);
+            }
+
+            return {
+                text: action.text,
+                hidden: false,
+                timeout_id: action.timeout_id
+            }
+        
         case "HIDE":
-            return "";
+            return initialState;
+        
         default: return state;
     }
 }
 
 const notify = (text, timeout) => {
     return async dispatch => {
-        dispatch({
-            type: "NOTIFY",
-            text: text
-        });
-        setTimeout(() => {
+        const timeoutId = setTimeout(() => {
             dispatch(hideNotification());
         }, timeout);
+
+        dispatch({
+            type: "NOTIFY",
+            text: text,
+            timeout_id: timeoutId
+        });
     }
 }
 
