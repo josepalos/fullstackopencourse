@@ -1,13 +1,12 @@
-import {useDispatch} from 'react-redux'
-import {addAnecdote} from '../reducers/anecdoteReducer';
+import { useDispatch } from 'react-redux'
+import { addAnecdote } from '../reducers/anecdoteReducer';
 
 const AnecdoteForm = () => {
     const dispatch = useDispatch()
 
-    const add = (event) => {
+    const add = async (event) => {
         event.preventDefault();
         const content = event.target.content.value;
-        console.log("Adding note with content", content);
         dispatch(addAnecdote(content));
     }
 

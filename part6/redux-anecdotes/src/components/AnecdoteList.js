@@ -6,13 +6,9 @@ const Anecdote = ({ anecdote }) => {
     const dispatch = useDispatch();
 
     const vote = (anecdote) => {
-        console.log('vote', anecdote.id)
-        dispatch(voteAnecdote(anecdote.id))
-        dispatch(notify(`You vote ${anecdote.content}`))
-
-        setTimeout(() => {
-            dispatch(hideNotification());
-        }, 5000);
+        console.log('vote', anecdote.id);
+        dispatch(voteAnecdote(anecdote));
+        dispatch(notify(`You vote ${anecdote.content}`, 5000));
     }
 
     return (

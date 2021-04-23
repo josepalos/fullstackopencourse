@@ -10,10 +10,17 @@ const reducer = (state = initialState, action) => {
     }
 }
 
-const notify = (text) => ({
-    type: "NOTIFY",
-    text: text
-})
+const notify = (text, timeout) => {
+    return async dispatch => {
+        dispatch({
+            type: "NOTIFY",
+            text: text
+        });
+        setTimeout(() => {
+            dispatch(hideNotification());
+        }, timeout);
+    }
+}
 
 const hideNotification = () => ({
     type: "HIDE"
