@@ -209,3 +209,13 @@ Parts: part 6
 Path: part6/unicafe-redux
 - [x] 6.1
 - [x] 6.2
+
+## Anecdotes (Redux version)
+Parts: part6
+Path: part6/redux-anecdotes
+- [x] 6.3
+- [x] 6.4
+- [x] 6.5
+- [x] 6.6
+- [x] 6.7
+- [x] 6.8
