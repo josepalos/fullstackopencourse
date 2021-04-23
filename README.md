@@ -203,3 +203,9 @@ Frontend path: part5/bloglist-frontend
 - [x] 5.20
 - [x] 5.21
 - [x] 5.22
+
+## Unicafe (Redux version)
+Parts: part 6
+Path: part6/unicafe-redux
+- [x] 6.1
+- [x] 6.2
