@@ -15,10 +15,33 @@ const useField = (type) => {
   }
 }
 
+const getCountryData = async (name) => {
+  try{
+    const matches = await axios.get(`https://restcountries.eu/rest/v2/name/${name}?fullText=true`);
+    if(matches.data.length === 1){
+      return matches.data[0];
+    }
+  } catch (err) {
+    console.error("No country data found for ", name);
+  }
+
+  return null;
+}
+
 const useCountry = (name) => {
   const [country, setCountry] = useState(null)
 
-  useEffect(() => {})
+  useEffect(() => {
+    const f = async () => {
+      const data = await getCountryData(name);
+
+      setCountry({
+        found: data !== null,
+        data: data
+      });
+    }
+    f();
+  }, [name]);
 
   return country
 }

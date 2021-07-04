@@ -240,7 +240,15 @@ Path: part7/routed-anecdotes
 - [x] 7.2
 - [x] 7.3
 - [x] 7.4
-- [ ] 7.5
-- [ ] 7.6
-- [ ] 7.7
+- [x] 7.5
+- [x] 7.6
+
+## Country (hooked version)
+Parts: part7
+Path: part7/country-hook
+- [x] 7.7
+
+## Notes (hooked version)
+Parts: part7
+Path: part7/ultimate-hooks
 - [ ] 7.8
