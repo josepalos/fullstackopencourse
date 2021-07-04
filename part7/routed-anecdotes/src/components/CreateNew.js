@@ -19,6 +19,14 @@ const CreateNew = (props) => {
 		});
 		history.push("/");
 	};
+
+	const clearForm = (e) => {
+		e.preventDefault();
+		content.clear();
+		author.clear();
+		info.clear();
+	}
+
 	return (<div>
 		<h2>create a new anecdote</h2>
 		<form onSubmit={handleSubmit}>
@@ -35,6 +43,7 @@ const CreateNew = (props) => {
 				{info.asFormField()}
 			</div>
 			<button>create</button>
+			<button onClick={clearForm}>Reset</button>
 		</form>
 	</div>);
 };
