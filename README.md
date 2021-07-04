@@ -251,4 +251,4 @@ Path: part7/country-hook
 ## Notes (hooked version)
 Parts: part7
 Path: part7/ultimate-hooks
-- [ ] 7.8
+- [x] 7.8

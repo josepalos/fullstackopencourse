@@ -18,20 +18,30 @@ const useField = (type) => {
 }
 
 const useResource = (baseUrl) => {
-  const [resources, setResources] = useState([])
+  const [resources, setResources] = useState([]);
 
-  // ...
+  const refresh = async () => {
+    const response = await axios.get(baseUrl);
+    setResources(response.data);
+  }
 
-  const create = (resource) => {
-    // ...
+  const create = async (resource) => {
+    console.log(resource);
+    const response = await axios.post(baseUrl, resource);
+
+    // Update the resources
+    await refresh();
+
+    return response.data;
   }
 
   const service = {
-    create
+    create,
   }
 
   return [
-    resources, service
+    resources, // All the individual resources
+    service // Service to manipulate the resources
   ]
 }
 
@@ -43,14 +53,14 @@ const App = () => {
   const [notes, noteService] = useResource('http://localhost:3005/notes')
   const [persons, personService] = useResource('http://localhost:3005/persons')
 
-  const handleNoteSubmit = (event) => {
+  const handleNoteSubmit = async (event) => {
     event.preventDefault()
-    noteService.create({ content: content.value })
+    await noteService.create({ content: content.value });
   }
  
-  const handlePersonSubmit = (event) => {
+  const handlePersonSubmit = async (event) => {
     event.preventDefault()
-    personService.create({ name: name.value, number: number.value})
+    await personService.create({ name: name.value, number: number.value})
   }
 
   return (
