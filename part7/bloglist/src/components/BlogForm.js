@@ -1,13 +1,26 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 
-const BlogForm = ({ handleNewBlog }) => {
+import { createBlog } from "../reducers/blogReducer";
+
+const BlogForm = () => {
+    const dispatch = useDispatch();
+
     const [title, setTitle] = useState("");
     const [author, setAuthor] = useState("");
     const [url, setUrl] = useState("");
 
     const newBlog = (event) => {
         event.preventDefault();
-        handleNewBlog(title, author, url);
+
+        dispatch(createBlog(title, author, url));
+        // TODO show the notifications and hide the form
+        // newNotification(`Created blog ${title}`, "success");
+        // console.log("Created new blog with title", title, ", author", author, "and url", url);
+        // newBlogRef.current.toggleVisibility();
+        // ---or error
+        // newNotification("Error creating the blog", "error");
+
         setTitle("");
         setAuthor("");
         setUrl("");
