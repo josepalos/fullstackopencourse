@@ -1,30 +1,17 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { voteAnecdote } from '../reducers/anecdoteReducer';
-import {notify, hideNotification} from '../reducers/notificationReducer';
+import { notify } from '../reducers/notificationReducer';
+import Filter from './Filter';
+import { Link } from 'react-router-dom';
 
-const Anecdote = ({ anecdote }) => {
+const AnecdoteList = () => {
     const dispatch = useDispatch();
-
     const vote = (anecdote) => {
         console.log('vote', anecdote.id);
         dispatch(voteAnecdote(anecdote));
         dispatch(notify(`You voted "${anecdote.content}"`, 5000));
     }
 
-    return (
-        <div>
-            <div>
-                {anecdote.content}
-            </div>
-            <div>
-                has {anecdote.votes}
-                <button onClick={() => vote(anecdote)}>vote</button>
-            </div>
-        </div>
-    )
-}
-
-const AnecdoteList = () => {
     const filter = useSelector(state => state.filter);
     console.log(`Using filter ${filter}`);
 
@@ -32,9 +19,19 @@ const AnecdoteList = () => {
         .filter(anecdote => anecdote.content.toLowerCase().includes(filter))
         .sort((a,b) => a.votes < b.votes);
     
-    return <div>
-        {anecdotes.map((anecdote) => <Anecdote anecdote={anecdote} key={anecdote.id} />)}
-    </div>
+    return <>
+        <h2>Anecdotes</h2>
+        <Filter />
+        <ul>
+            {anecdotes.map(anecdote => <li key={anecdote.id}>
+                <Link to={`/anecdotes/${anecdote.id}`}>
+                    {anecdote.content}
+                </Link>
+                &nbsp;({anecdote.votes})&nbsp;
+                <button onClick={() => vote(anecdote)}>Vote</button>
+            </li>)}
+        </ul>
+    </>;
 }
 
 export default AnecdoteList;

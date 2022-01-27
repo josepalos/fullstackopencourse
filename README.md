@@ -1,98 +1,7 @@
 Full stack open course
 ======================
 
-# Courses
-
-Parts: part 1 & 2
-
-Path: part1/courses
-
-Related exercises:
-- [x] 1.1
-- [x] 1.2
-- [x] 1.3
-- [x] 1.4
-- [x] 2.1
-- [x] 2.2
-- [x] 2.3
-- [x] 2.4
-- [x] 2.5
-
-To run the app use
-```
-$ cd part1/courses
-$ npm start
-```
-
-## Unicafe
-
-Parts: part 1
-
-Path: part1/unicafe
-
-Related exercises:
-- [x] 1.6
-- [x] 1.7
-- [x] 1.8
-- [x] 1.9
-- [x] 1.10
-- [x] 1.11
-
-To run the app use
-```
-$ cd part1/unicafe
-$ npm start
-```
-
-
-## Anecdotes
-
-Parts: part 1
-
-Path: part1/anecdotes
-
-Related exercises:
-- [x] 1.12
-- [x] 1.13
-- [x] 1.14
-
-To run the app use
-```
-$ cd part1/anecdotes
-$ npm start
-```
-
 ## Phonebook
-
-### Part 2
-Path: part2/phonebook
-
-Related exercises:
-- [x] 2.6
-- [x] 2.7
-- [x] 2.8
-- [x] 2.9
-- [x] 2.10
-- [x] 2.11
-- [x] 2.15
-- [x] 2.16
-- [x] 2.17
-- [x] 2.18
-- [x] 2.19
-- [x] 2.20
-
-To run the json server use
-```
-$ cd part2/phonebook
-$ npx json-server --port 3001 --watch db.json
-```
-
-To run the app use
-```
-$ cd part2/phonebook
-$ npm start
-```
-
 ### Part 3
 Parts: part 3
 
@@ -130,22 +39,6 @@ To run the server locally use
 ```
 $ cd part3/phonebook/backend
 $ npm index
-```
-
-## Countries
-Parts: part 2
-
-Path: part2/countries
-
-Related exercises:
-- [x] 2.12
-- [x] 2.13
-- [x] 2.14
-
-To run the app use
-```
-$ cd part2/phonebook
-$ npm start
 ```
 
 ## Blog list
@@ -209,39 +102,6 @@ Parts: part 6
 Path: part6/unicafe-redux
 - [x] 6.1
 - [x] 6.2
-
-## Anecdotes (Redux version)
-Parts: part6
-Path: part6/redux-anecdotes
-- [x] 6.3
-- [x] 6.4
-- [x] 6.5
-- [x] 6.6
-- [x] 6.7
-- [x] 6.8
-- [x] 6.9
-- [x] 6.10
-- [x] 6.11
-- [x] 6.12
-- [x] 6.13
-- [x] 6.14
-- [x] 6.15
-- [x] 6.16
-- [x] 6.17
-- [x] 6.18
-- [x] 6.19
-- [x] 6.20
-- [x] 6.21
-
-## Anecdotes (routed version)
-Parts: part7
-Path: part7/routed-anecdotes
-- [x] 7.1
-- [x] 7.2
-- [x] 7.3
-- [x] 7.4
-- [x] 7.5
-- [x] 7.6
 
 ## Country (hooked version)
 Parts: part7
