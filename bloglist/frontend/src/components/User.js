@@ -8,7 +8,7 @@ const BlogsList = ({ blogs }) => {
     }else{
         return (
             <ul>
-                {blogs.map((blog) => <li key={blog.id}>{blog.name}</li>)}
+                {blogs.map((blog) => <li key={blog.id}>{blog.title}</li>)}
             </ul>
         );
     }
@@ -25,6 +25,8 @@ const User = () => {
     if (!user){
         return null;
     }
+
+    console.log(user.blogs);
 
     return (
         <div>

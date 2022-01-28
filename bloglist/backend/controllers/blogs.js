@@ -11,11 +11,16 @@ blogsRouter.get("", async (request, response) => {
 });
 
 blogsRouter.post("", requireTokenAuth, async (request, response) => {
+	const user = request.tokenUser;
 	const newBlog = new Blog({
 		...request.body,
-		user: request.tokenUser.id
+		user: user.id
 	});
 	const savedBlog = await newBlog.save();
+
+	user.blogs = user.blogs.concat(savedBlog._id);
+	await user.save();
+	
 	response.status(201).json(savedBlog);
 });
 
