@@ -5,7 +5,7 @@ module.exports = {
         "jest/globals": true,
         "cypress/globals": true
     },
-    "extends": [ 
+    "extends": [
         "eslint:recommended",
         "plugin:react/recommended"
     ],
@@ -22,7 +22,7 @@ module.exports = {
     "rules": {
         "indent": [
             "error",
-            4  
+            4
         ],
         "linebreak-style": [
             "error",
@@ -52,8 +52,8 @@ module.exports = {
         "react/prop-types": 0
     },
     "settings": {
-      "react": {
-        "version": "detect"
-      }
+        "react": {
+            "version": "detect"
+        }
     }
-  }
+};

@@ -1,44 +1,52 @@
 import React from "react";
-import PropTypes from "prop-types";
+import { useDispatch } from "react-redux";
 
-const LoginForm = ({ handleSignUp, name, setName, username, setUsername, password, setPassword }) => (
-    <form onSubmit={handleSignUp}>
-        <div>
-            <label htmlFor="name">Name: </label>
-            <input type="text"
-                value={name}
-                name="Name"
-                onChange={({ target }) => setName(target.value)}
-            />
-        </div>
-        <div>
-            <label htmlFor="username">Username: </label>
-            <input type="text"
-                value={username}
-                name="Username"
-                onChange={({ target }) => setUsername(target.value)}
-            />
-        </div>
-        <div>
-            <label htmlFor="password">Password: </label>
-            <input type="password"
-                value={password}
-                name="Password"
-                onChange={({ target }) => setPassword(target.value)}
-            />
-        </div>
-        <button type="submit">Sign up</button>
-    </form>
-);
+import { useField } from "../hooks/index";
+import usersService from "../services/users";
+import { loginUser, signUpUser } from "../reducers/userReducer";
 
-LoginForm.propTypes = {
-    handleSignUp: PropTypes.func.isRequired,
-    name: PropTypes.string.isRequired,
-    setName: PropTypes.func.isRequired,
-    username: PropTypes.string.isRequired,
-    setUsername: PropTypes.func.isRequired,
-    password: PropTypes.string.isRequired,
-    setPassword: PropTypes.func.isRequired,
+
+const LoginForm = () => {
+    const dispatch = useDispatch();
+
+    const name = useField("text");
+    const username = useField("text");
+    const password = useField("password");
+
+    const handleSignUp = async (event) => {
+        event.preventDefault();
+
+        try {
+            const newUser = await usersService.signUp(name.value, username.value, password.value);
+            dispatch(loginUser(newUser));
+            // TODO move the call to the service inside the reducer
+            dispatch(signUpUser(newUser));
+
+            name.clear();
+            username.clear();
+            password.clear();
+        } catch (error) {
+            //newNotification("Error creating the new user", "error");
+        }
+    };
+
+    return (
+        <form onSubmit={handleSignUp}>
+            <div>
+                <label htmlFor="name">Name: </label>
+                {name.asFormField()}
+            </div>
+            <div>
+                <label htmlFor="username">Username: </label>
+                {username.asFormField()}
+            </div>
+            <div>
+                <label htmlFor="password">Password: </label>
+                {password.asFormField()}
+            </div>
+            <button type="submit">Sign up</button>
+        </form>
+    );
 };
 
 export default LoginForm;

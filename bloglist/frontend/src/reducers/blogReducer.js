@@ -2,19 +2,19 @@ import blogService from "../services/blogs";
 
 const blogReducer = (state = [], action) => {
     switch(action.type){
-        case "BLOG_NEW":
-            return [...state, action.blog];
-        case "BLOG_INIT":
-            return [...action.blogs];
-        case "BLOG_DELETE":
-            return state.filter(b => b.id !== action.blog_id);
-        case "BLOG_LIKE":
-            return [
-                ...state.filter(b => b.id !== action.blog.id),
-                action.blog
-            ];
-        default:
-            return state;
+    case "BLOG_NEW":
+        return [...state, action.blog];
+    case "BLOG_INIT":
+        return [...action.blogs];
+    case "BLOG_DELETE":
+        return state.filter(b => b.id !== action.blog_id);
+    case "BLOG_LIKE":
+        return [
+            ...state.filter(b => b.id !== action.blog.id),
+            action.blog
+        ];
+    default:
+        return state;
     }
 };
 

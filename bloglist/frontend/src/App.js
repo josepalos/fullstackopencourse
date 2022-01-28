@@ -1,156 +1,57 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
+import {
+    BrowserRouter as Router,
+    Switch, Route, Link
+} from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
+import { showNotification, hideNotification } from "./reducers/notificationReducer";
+import { initializeBlogs } from "./reducers/blogReducer";
+import { loginUser, logoutUser, initializeUsers } from "./reducers/userReducer";
+
+import Users from "./components/Users";
+import User from "./components/User";
 import Blogs from "./components/Blogs";
 import LoginForm from "./components/LoginForm";
 import SignUpForm from "./components/SignUpForm";
 import Notifications from "./components/notifications/Notifications";
 import Toggleable from "./components/Toggleable";
 
-import blogService from "./services/blogs";
-import loginService from "./services/login";
 
 const App = () => {
-    const [blogs, setBlogs] = useState([]);
-    const [user, setUser] = useState(null);
-
-    // Login state
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-
-    // Signup state
-    const [signupName, setSignupName] = useState("");
-    const [signupUsername, setSignupUsername] = useState("");
-    const [signupPassword, setSignupPassword] = useState("");
-
-    // Notifications
-    const [notifications, setNotifications] = useState([]);
+    const dispatch = useDispatch();
+    const loggedUser = useSelector(state => state.user.loggedUser);
 
     // References
-    const newBlogRef = useRef();
+    const newBlogRef = useRef(); // It was used by the form to toggle its visibility before thunk.
 
     const newNotification = (text, type) => {
         const id = Math.random().toString(36).substr(2, 9);
 
-        const newArray = [...notifications, {
-            id: id,
-            text: text,
-            type: type,
-            time: new Date()
-        }];
-        console.log(newArray);
-        setNotifications(newArray);
-
-        setTimeout(() => removeNotification(id), 5000);
-
+        dispatch(showNotification(id, text, type));
+        setTimeout(() =>
+            dispatch(hideNotification(id))
+        , 5000);
         return id;
     };
 
-    const removeNotification = (id) => {
-        setNotifications(notifications.filter(n => n.id !== id));
-    };
-
-    const resetForms = () => {
-        setUsername("");
-        setPassword("");
-        setSignupName("");
-        setSignupUsername("");
-        setSignupPassword("");
-    };
-
-    const handleLogin = async (event) => {
-        event.preventDefault();
-        try{
-            const user = await loginService.login(username, password);
-            setUser(user);
-            blogService.setToken(user.token);
-            console.log(user);
-
-            window.localStorage.setItem("loggedBlogsappUser", JSON.stringify(user));
-            resetForms();
-        } catch (exception) {
-            newNotification("Wrong credentials", "error");
-        }
-
-    };
-
-    const handleSignUp = async (event) => {
-        event.preventDefault();
-        try{
-            const newUser = await loginService.signUp(signupName, signupUsername, signupPassword);
-            setUser(newUser);
-            blogService.setToken(user.token);
-            console.log(user);
-
-            window.localStorage.setItem("loggedBlogsappUser", JSON.stringify(user));
-            resetForms();
-        }catch (exception) {
-            newNotification("Error creating the new user", "error");
-        }
-    };
-
-    const handleNewBlog = async (title, author, url) => {
-        try{
-            await blogService.create(title, author, url);
-
-            newNotification(`Created blog ${title}`, "success");
-            console.log("Created new blog with title", title, ", author", author, "and url", url);
-            newBlogRef.current.toggleVisibility();
-        } catch (error){
-            newNotification("Error creating the blog", "error");
-        }
-
-
-        // Reload the blogs list
-        const blogs = await blogService.getAll();
-        setBlogs(blogs);
-    };
-
-    const handleLikeBlog = async (blogData) => {
-        try{
-            console.log("Liked blog", blogData);
-            await blogService.likeBlog(blogData);
-            const blogs = await blogService.getAll();
-            setBlogs(blogs);
-        } catch (error) {
-            console.error("Error liking the blog:", error);
-        }
-    };
-
-    const handleDeleteBlog = async (blogData) => {
-        if(window.confirm(`Do you want to delete the blog ${blogData.title}?`)){
-            console.log("Delete blog", blogData);
-            try{
-                await blogService.deleteBlog(blogData.id);
-                const blogs = await blogService.getAll();
-                setBlogs(blogs);
-            } catch (error) {
-                console.error("Error liking the blog:", error);
-            }
-        }
-    };
-
     const logout = () => {
-        setUser(null);
-        blogService.setToken(null);
-        window.localStorage.removeItem("loggedBlogsappUser");
+        dispatch(logoutUser());
     };
 
-    // Fetch the blogs
+    // Fetch the blogs and all the users
     useEffect(() => {
-        const fetchBlogs = async () => {
-            const blogs = await blogService.getAll();
-            setBlogs(blogs);
-        };
-        fetchBlogs();
-    }, []);
+        dispatch(initializeBlogs());
+        dispatch(initializeUsers());
+    }, [dispatch]);
 
     // Try to fetch the logged user
     useEffect(() => {
+        // Duplicated code with userReducer
         const loggedUserJSON = window.localStorage.getItem("loggedBlogsappUser");
         if(loggedUserJSON){
             const user = JSON.parse(loggedUserJSON);
-            setUser(user);
-            blogService.setToken(user.token);
+            dispatch(loginUser(user));
         }
     }, []);
 
@@ -158,24 +59,12 @@ const App = () => {
         <>
             <Toggleable showButtonLabel="Login" hideButtonLabel="Cancel">
                 <h3>Login</h3>
-                <LoginForm username={username}
-                    handleUsernameChange={({ target }) => setUsername(target.value)}
-                    password={password}
-                    handlePasswordChange={({ target }) => setPassword(target.value)}
-                    handleLogin={handleLogin}
-                />
+                <LoginForm />
             </Toggleable>
 
             <Toggleable showButtonLabel="Sign up" hideButtonLabel="Cancel">
                 <h3>Create a new user</h3>
-                <SignUpForm name={signupName}
-                    setName={setSignupName}
-                    username={signupUsername}
-                    setUsername={setSignupUsername}
-                    password={signupPassword}
-                    setPassword={setSignupPassword}
-                    handleSignUp={handleSignUp}
-                />
+                <SignUpForm />
             </Toggleable>
         </>
     );
@@ -183,22 +72,48 @@ const App = () => {
     const renderMainPage = () => (
         <div>
             <div>
-                <h3>Logged in as {user.name}</h3><button onClick={logout}>Logout</button>
+                <h3>Logged in as {loggedUser.name}</h3>
+                <button onClick={logout}>Logout</button>
             </div>
             <div>
-                <Blogs blogs={blogs} handleNewBlog={handleNewBlog} newBlogRef={newBlogRef} likeBlogAction={handleLikeBlog} deleteBlogAction={handleDeleteBlog} />
+                <button onClick={() => newNotification("Hola", "success")}>
+                    Notify
+                </button>
+            </div>
+            <div>
+                <Blogs newBlogRef={newBlogRef} />
             </div>
         </div>
     );
 
+    const padding = {
+        padding: 5
+    };
+
     return (
-        <div>
-            <h2>blogs</h2>
-            <Notifications notifications={notifications} />
-            {user === null
-                ? renderForms()
-                : renderMainPage() }
-        </div>
+        <Router>
+            <div>
+                <h2>Blogs</h2>
+                <div>
+                    <Link style={padding} to="/">Blogs</Link>
+                    <Link style={padding} to="/users">Users</Link>
+                </div>
+                <Notifications />
+                <Switch>
+                    <Route path="/users/:id">
+                        <User />
+                    </Route>
+                    <Route path="/users">
+                        <Users />
+                    </Route>
+                    <Route>
+                        {loggedUser === null
+                            ? renderForms()
+                            : renderMainPage() }
+                    </Route>
+                </Switch>
+            </div>
+        </Router>
     );
 };
 

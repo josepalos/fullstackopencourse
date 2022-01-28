@@ -1,40 +1,36 @@
 import React from "react";
-import PropTypes from "prop-types";
+import { useDispatch } from "react-redux";
 
-const LoginForm = ({
-    handleLogin,
-    username,
-    handleUsernameChange,
-    password,
-    handlePasswordChange
-}) => (
-    <form onSubmit={handleLogin} className="login-form">
-        <div>
-            <label htmlFor="username">Username: </label>
-            <input type="text"
-                value={username}
-                name="Username"
-                onChange={handleUsernameChange}
-            />
-        </div>
-        <div>
-            <label htmlFor="password">Password: </label>
-            <input type="password"
-                value={password}
-                name="Password"
-                onChange={handlePasswordChange}
-            />
-        </div>
-        <button type="submit">Login</button>
-    </form>
-);
+import { useField } from "../hooks/index";
+import { loginUserByCredentials } from "../reducers/userReducer";
 
-LoginForm.propTypes = {
-    handleLogin: PropTypes.func.isRequired,
-    username: PropTypes.string.isRequired,
-    handleUsernameChange: PropTypes.func.isRequired,
-    password: PropTypes.string.isRequired,
-    handlePasswordChange: PropTypes.func.isRequired,
+const LoginForm = () => {
+    const dispatch = useDispatch();
+
+    const username = useField("text");
+    const password = useField("password");
+
+    const handleLogin = (event) => {
+        event.preventDefault();
+        dispatch(loginUserByCredentials(username.value, password.value));
+
+        username.clear();
+        password.clear();
+    };
+
+    return (
+        <form onSubmit={handleLogin} className="login-form">
+            <div>
+                <label htmlFor="username">Username: </label>
+                {username.asFormField()}
+            </div>
+            <div>
+                <label htmlFor="password">Password: </label>
+                {password.asFormField()}
+            </div>
+            <button type="submit">Login</button>
+        </form>
+    );
 };
 
 export default LoginForm;

@@ -8,16 +8,16 @@ const defaultState = {
 
 const userReducer = (state = defaultState, action) => {
     switch (action.type) {
-        case "USER_LOGIN":
-            return { ...state, loggedUser: action.user };
-        case "USER_LOGOUT":
-            return { ...state, loggedUser: null };
-        case "USER_SIGNUP":
-            return { ...state, allUsers: [...state.allUsers, action.user] };
-        case "USER_INITIALIZE":
-            return { ...state, allUsers: action.users };
-        default:
-            return state;
+    case "USER_LOGIN":
+        return { ...state, loggedUser: action.user };
+    case "USER_LOGOUT":
+        return { ...state, loggedUser: null };
+    case "USER_SIGNUP":
+        return { ...state, allUsers: [...state.allUsers, action.user] };
+    case "USER_INITIALIZE":
+        return { ...state, allUsers: action.users };
+    default:
+        return state;
     }
 };
 

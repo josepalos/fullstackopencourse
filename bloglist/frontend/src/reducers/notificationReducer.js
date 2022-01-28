@@ -1,11 +1,11 @@
 const notificationReducer = (state = [], action) => {
     switch(action.type){
-        case "NOTIFICATION_NEW":
-            return [...state, action.notification];
-        case "NOTIFICATION_HIDE":
-            return state.filter(n => n.id !== action.notification_id);
-        default:
-            return state;
+    case "NOTIFICATION_NEW":
+        return [...state, action.notification];
+    case "NOTIFICATION_HIDE":
+        return state.filter(n => n.id !== action.notification_id);
+    default:
+        return state;
     }
 };
 
