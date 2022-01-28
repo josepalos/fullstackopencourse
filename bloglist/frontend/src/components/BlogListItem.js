@@ -7,7 +7,7 @@ import Toggleable from "./Toggleable";
 import "./blog.css";
 
 
-const Blog = ({ blog }) => {
+const BlogListItem = ({ blog }) => {
     const dispatch = useDispatch();
 
     const handleDelete = (event) => {
@@ -47,4 +47,4 @@ const Blog = ({ blog }) => {
     );
 };
 
-export default Blog;
+export default BlogListItem;

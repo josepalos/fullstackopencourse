@@ -1,7 +1,7 @@
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
 import { render, fireEvent } from "@testing-library/react";
-import Blog from "./Blog";
+import BlogItemList from "./BlogItemList";
 
 describe("Blog component", () => {
     let blog;
@@ -18,7 +18,7 @@ describe("Blog component", () => {
         likeBlogAction = (blog) => {};
 
         component = render(
-            <Blog blog={blog} likeBlogAction={() => likeBlogAction(blog)}/>
+            <BlogItemList blog={blog} likeBlogAction={() => likeBlogAction(blog)}/>
         );
     });
 
