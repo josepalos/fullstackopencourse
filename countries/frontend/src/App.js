@@ -1,100 +1,125 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import CountriesList from "./components/CountriesList";
+import Country from "./components/Country";
+
+
+const useField = (type, onChange) => {
+  const [value, setValue] = useState("");
+
+  const internalOnChange = (event) => {
+    event.preventDefault();
+    setValue(event.target.value);
+
+    if(onChange !== undefined)
+      onChange(event.target.value);
+  };
+
+  const asInput = () => <input type={type} value={value} onChange={internalOnChange} />
+
+  return {
+    value,
+    asInput
+  };
+}
+
+
+const findCountries = async (partialName) => {
+  if(partialName === "") return null;
+
+  try {
+    const matches = await axios.get(`https://restcountries.com/v2/name/${partialName}`);
+    if(matches.data.status === 404){
+      return null;
+    }
+
+    return matches.data;
+  } catch (err) {
+    console.error("Error requesting data for ", partialName);
+  }
+
+  return null;
+}
+
+const getCountryData = async (name) => {
+  if(name === "") return null;
+  try {
+    const match = await axios.get(`https://restcountries.com/v2/name/${name}?fullText=true`);
+    if (match.data.status === 404){ 
+      return null;
+    }
+
+    return match;
+  } catch(err) {
+    console.error("Error requesting data for country ", name);
+  }
+
+  return null;
+}
+
+const useCountry = (name) => {
+  const [country, setCountry] = useState(null);
+
+  useEffect(() => {
+    const f = async () => {
+      let data = await getCountryData(name);
+      if (data !== null){
+        data = data.data[0];
+      }
+
+      setCountry({
+        found: data !== null,
+        data: data
+      });
+    };
+    f();
+  }, [name]);
+
+  return country;
+}
 
 function App() {
   const [countries, setCountries] = useState([]);
-  const [currentCountry, setCurrentCountry] = useState(null);
-  const [name, setName] = useState('');
+  const [filter, setFilter] = useState("");
+  const [name, setName] = useState("");
+  const currentCountry = useCountry(name);
 
-  const handleSearchChange = (event) => {
-    let name = event.target.value;
-    setName(name);
-
-    axios
-      .get(`https://restcountries.eu/rest/v2/name/${name}`)
-      .then(response => {
-        if (response.data.length === 1){
-          setCurrentCountry(countries[0]);
-        }else{
-          setCurrentCountry(null);
-        }
-        setCountries(response.data)
-      })
-      .catch(error => setCountries([]));
-  }
-
-  const showOneCountry = () => {
-    if (currentCountry === null){
-      return <div>Country not selected</div>
+  const fetch = (value) => {
+    const countryName = value;
+    
+    const search = async () => {
+      const countries = await findCountries(countryName);
+      if(countries === null){
+        setCountries([]);
+      }else{
+        setCountries(countries);
+      }
     }
-    return (
-    <div>
-      <h2>{currentCountry.name}</h2>
-      <div>
-        <span>Capital {currentCountry.capital}</span>
-        <br/>
-        <span>Population {currentCountry.population}</span>
-        <h3>Languages</h3>
-        <ul>
-          {currentCountry.languages.map( language => <li key={language.iso639_2}>{language.name} ({language.nativeName})</li>)}
-        </ul>
-        <img src={currentCountry.flag} width="10%" alt={`Flag of ${currentCountry.name}`}/>
-      </div>
-    </div>
-    )
+    search();
+    setFilter(countryName);
+  }
+  const nameInput = useField("text", fetch);
+
+
+  const showCountry = (country) => {
+    setName(country.name);
   }
 
-  const handleShowCountry = (country) => (event) => {
-    setCurrentCountry(country);
-  }
-
-  const countryItem = (country) => (
-    <li key={country.alpha3Code}>
-      <span>{country.name}</span>
-      <span>
-        <button onClick={handleShowCountry(country)}>show</button>
-      </span>
-    </li>
-  )
-  
-  const showCountryList = () => (
-    <div>
-      <ul>
-        {countries.map(countryItem)}
-      </ul>
-    </div>
-  )
-
-  const showData = () => {
-    if (countries.length === 0) {
-      return <div>No country found for name "{name}"</div>
-    }else if (countries.length === 1){
-      return <div></div>
-    }else if (countries.length <= 10){
-      return showCountryList();
-    }else{
-      return <div>Too many matches, specify another filter</div>
-    }
-  }
+  const hideCountry = () => setName("");
 
   return (
     <div>
       <div>
-        <form>
-          <input
-            value={name}
-            onChange={handleSearchChange}
-          />
+        <form onSubmit={fetch}>
+          {nameInput.asInput()}
         </form>
       </div>
+
+      <CountriesList filter={filter} showCountry={showCountry} countries={countries} />
+
       <div>
-        {showData()}
-      </div>
-      <div>
-        <h1>Country info</h1>
-        <div>
-          {showOneCountry()}
-        </div>
+  <h1>Country info { currentCountry === null ? null : <button onClick={hideCountry}>Hide</button> }</h1>
+        <Country country={currentCountry} />
       </div>
     </div>
   );
