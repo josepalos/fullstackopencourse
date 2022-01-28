@@ -1,0 +1,11 @@
+.header {
+    background-color: lightgray;
+    padding: 5px;
+}
+.menu_entry {
+    padding: 10px;
+    font-size: 20px;
+}
+.logoutBtn {
+    margin: 10px;
+}

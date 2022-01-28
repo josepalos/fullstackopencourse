@@ -1,10 +1,11 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import { deleteBlog, likeBlog } from "../reducers/blogReducer";
 
 import Toggleable from "./Toggleable";
-import "./blog.css";
+import "./BlogListItem.css";
 
 
 const BlogListItem = ({ blog }) => {
@@ -30,7 +31,9 @@ const BlogListItem = ({ blog }) => {
             <b>{blog.title}</b>; by <i>{blog.author}</i>
             <Toggleable showButtonLabel="Show details">
                 <span className="blog-title">
-                    <p>Title: {blog.title}</p>
+                    <Link to={`/blogs/${blog.id}`} >
+                        Title: {blog.title}
+                    </Link>
                 </span>
                 <span className="blog-url">
                     <p>Url: <a href={blog.url} target="blank">{blog.url}</a></p>

@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const BlogsList = ({ blogs }) => {
@@ -8,7 +8,11 @@ const BlogsList = ({ blogs }) => {
     }else{
         return (
             <ul>
-                {blogs.map((blog) => <li key={blog.id}>{blog.title}</li>)}
+                {blogs.map((blog) => <li key={blog.id}>
+                    <Link to={`/blogs/${blog.id}`} >
+                        {blog.title}
+                    </Link>
+                </li>)}
             </ul>
         );
     }
